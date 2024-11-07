@@ -24,7 +24,6 @@ var readyToPlay = true;
 var idle = false;
 var idleTimer = null;
 
-
 var MAX_TEXT_INPUT_REQUEST_ERRORS = 4;
 var currentTextInputRequestErrors = 0;
 
@@ -207,28 +206,24 @@ function handleBreathing() {
   }
 }
 
-
 function mouseMoved(event) {
 }
 
 function slide(event, ui) {
   if (arousal >= 1.0) {
-    return; // 如果进度达到 100%，直接返回，不执行后续代码
+    return; 
   }
 
-  // 获取当前滑块的位置
   const sliderPosition = ui.value;
 
-  // 检查是否立即到达区间边界，亮灭LED
   if (sliderPosition === strokeRanges[currentStrokeRange].low || sliderPosition === strokeRanges[currentStrokeRange].high) {
-    fetch('http://192.168.1.106/LED_ON') // 立即亮起
+    fetch('http://IP/LED_ON')
       .catch((error) => console.error('Error:', error));
   } else {
-    fetch('http://192.168.1.106/LED_OFF') // 离开边界则立即熄灭
+    fetch('http://IP/LED_OFF')
       .catch((error) => console.error('Error:', error));
   }
 
-  // 原有逻辑保持不变
   idle = false;
   if (idleTimer != null) clearTimeout(idleTimer);
   idleTimer = setTimeout(function() {
@@ -302,7 +297,6 @@ function setNewStroke() {
   // }
 }
 
-
 function highlightTarget() {
   // Clear formatting of pips
   $('.ui-slider-label').css({
@@ -318,7 +312,6 @@ function highlightTarget() {
     backgroundColor: 'white'
   });
 }
-
 
 // findSelected()
 //
@@ -373,14 +366,10 @@ function openApp() {
   setNewStroke();
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // SETUP
 //
-
-
-
 
 // Loading the sound effects
 
@@ -408,7 +397,6 @@ function loadSounds() {
 
   allSounds = [chimesSFX,dingSFX,negativeSFX,fanfareSFX,clickSFX,startupSFX,shutdownSFX,notifySFX];
 }
-
 
 function createApp() {
   // Create app as a dialog
@@ -489,7 +477,6 @@ function showTextInputDialog() {
   chimesSFX.play();
   strokeTimingOn = false;
 }
-
 
 function createTextInputDialog() {
   $textInput = $('<div id="text-input"></div>');
@@ -629,7 +616,7 @@ function showGameOverDialog() {
   isFlashing = false;
   clearInterval(flashInterval);
 
-  fetch('http://192.168.1.106/LED_ON')
+  fetch('http://IP/LED_ON')
     .catch((error) => console.error('Error:', error));
   // Trigger a mouseup on the slider to avoid the user continuing to use it
   $slider.trigger('mouseup');
@@ -753,8 +740,8 @@ let flashInterval;
 function handleOrgasm() {
   isFlashing = true;
   flashInterval = setInterval(() => {
-    fetch('http://192.168.1.106/LED_ON')
-      .then(() => setTimeout(() => fetch('http://192.168.1.106/LED_OFF'), 200))
+    fetch('http://IP/LED_ON')
+      .then(() => setTimeout(() => fetch('http://IP/LED_OFF'), 200))
       .catch((error) => console.error('Error:', error));
   }, 500);
 
@@ -820,7 +807,6 @@ function handleOrgasm() {
   }
   return;
 }
-
 
 function handleSuccessfulSelection() {
   var pleaseOrPeriod = (Math.random() < 0.5) ? ", please." : ".";
